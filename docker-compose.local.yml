@@ -1,0 +1,14 @@
+version: '3.3'
+
+services:
+    service-dev:
+      image: rag_service:latest
+      container_name: rag_service
+      ports:
+        - "10000:8080"
+      healthcheck:
+        test: ["CMD", "curl", "-f", "http://127.0.0.1:10000/health"]
+        interval: 10s
+        timeout: 10s
+        retries: 3
+      restart: always

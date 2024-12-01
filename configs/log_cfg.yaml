@@ -1,0 +1,28 @@
+version: 1.0
+disable_existing_loggers: false
+
+formatters:
+  standard:
+    format: "%(asctime)s - %(levelname)-8s - %(filename)s - [%(funcName)s:%(lineno)d] - %(message)s"
+
+  python_json_formatter:
+    format: "%(message)s"
+#    class: da_robot_max_chain.da_log.logger.ELKJsonFormatter
+
+handlers:
+  console:
+    class: logging.StreamHandler
+    level: DEBUG
+    formatter: python_json_formatter
+    stream: ext://sys.stdout
+
+
+loggers:
+  uvicorn:
+    error:
+      propagate: false
+
+root:
+  level: DEBUG
+  handlers: [console]
+  propagate: no

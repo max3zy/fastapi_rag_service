@@ -1,0 +1,14 @@
+import re
+
+TABS_REGEXP_TEXT = r"[\n\t\r]+"
+TABS_REGEXP = re.compile(TABS_REGEXP_TEXT)
+TAGS_REGEXP_TEXT = r"(\<(/?[^>]+)>)"
+TAGS_REGEXP = re.compile(TAGS_REGEXP_TEXT)
+SYMBOLS_REGEXP_TEXT = r"[^a-zа-я0-9]"
+SYMBOLS_REGEXP = re.compile(SYMBOLS_REGEXP_TEXT)
+SYMBOLS_WITHDASH_REGEXP_TEXT = r"(\s\-\s)|(\-\s)|(\s\-)|([^a-zа-я0-9\-])"
+SYMBOLS_WITHDASH_REGEXP = re.compile(SYMBOLS_WITHDASH_REGEXP_TEXT)
+SPACES_REGEXP_TEXT = r"\s+"
+SPACES_REGEXP = re.compile(SPACES_REGEXP_TEXT)
+HTML_REGEXP_TEXT = r"(\<(/?[^>]+)>)"
+HTML_REGEXP = re.compile(HTML_REGEXP_TEXT)

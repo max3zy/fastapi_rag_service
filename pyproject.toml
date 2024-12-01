@@ -1,0 +1,74 @@
+[tool.poetry]
+name = "rag-service"
+version = "0.1.0"
+description = ""
+authors = [
+    "xd"
+]
+readme = "README.md"
+packages = []
+
+[tool.poetry.dependencies]
+python = "3.9.13"
+fastapi = "^0.109.1"
+dynaconf = "^3.1.11"
+uvicorn = "^0.20.0"
+pyaml = "^21.10.1"
+dependency-injector = "^4.41.0"
+#onnxruntime = "^1.17.1"
+transformers = "^4.39.3"
+opensearch-py = "^2.7.1"
+sentence-transformers = "^3.3.1"
+ollama = "^0.4.1"
+aioredis = "^2.0.1"
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.1.0"
+mypy = "^1.0.1"
+pylint = "^2.16.2"
+coverage = "^7.2.1"
+pytest = "^7.2.1"
+pytest-cov = "^4.0.0"
+pytest-asyncio = "^0.20.3"
+isort = "^5.12.0"
+bandit = "^1.7.4"
+dvc-s3 = "^2.21.0"
+pandas = "^2.2.3"
+
+[[tool.poetry.source]]
+name = "PyPI"
+priority = "primary"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.black]
+    line-length=79
+
+[tool.bandit]
+    [tool.bandit.assert_used]
+    skips=["*/test_*.py", "*/gunicorn_conf.py"]
+
+
+[tool.pylint]
+    extension-pkg-whitelist = "pydantic"
+
+    [tool.pylint."MESSAGES CONTROL"]
+        confidence = ""
+        disable = [
+            "missing-function-docstring",
+            "missing-module-docstring",
+            "missing-class-docstring",
+            "too-few-public-methods"
+        ]
+
+
+[tool.coverage]
+    [tool.coverage.run]
+    source=['app']
+    omit = ['__init__.py']
+
+    [tool.coverage.report]
+    skip_empty = true

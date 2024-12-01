@@ -1,0 +1,11 @@
+.git*
+venv*
+reports*
+__pycache__*
+.idea*
+.gitlab
+./cfg_dev
+.gitlab-ci.yml
+Dockerfile
+/.dvc/cache*
+/.dvc/tmp*

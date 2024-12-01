@@ -1,13 +1,13 @@
-
+from dependency_injector import containers, providers
 
 from app.config import settings
+
 # from app.estimators.classifiers import ClassifierRuBert, OnnxLoader
 from app.services.classify_service import Rag
 from app.services.prompt_service import PromptService
 from app.services.redis.redis_init_pool import init_redis_pool
 from app.services.redis.redis_service import CacheRedis
 from app.strategies.strategies import TrivialStrategy
-from dependency_injector import containers, providers
 
 
 class AppContainer(containers.DeclarativeContainer):

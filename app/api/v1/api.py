@@ -1,5 +1,6 @@
-from app.api.v1.endpoints import classify
 from fastapi import APIRouter
+
+from app.api.v1.endpoints import classify
 
 
 def config_routers_v1() -> APIRouter:

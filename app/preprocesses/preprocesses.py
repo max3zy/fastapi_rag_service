@@ -1,17 +1,16 @@
 from app.schemas.common.estimators_dto import EstimatorIn
-from app.services.prompt_service import PromptService
-from app.utils.preprocess.preprocessing import text_cleanup_preprocessor, \
-    clean_html
-
 from app.schemas.rag import RagRequest
+from app.services.prompt_service import PromptService
+from app.utils.preprocess.preprocessing import (
+    clean_html,
+    text_cleanup_preprocessor,
+)
 
 
 def preprocess(
     request: RagRequest, prompt_storage: PromptService
 ) -> EstimatorIn:
-    cleanup_text = text_cleanup_preprocessor(
-        clean_html(request.query)
-    )
+    cleanup_text = text_cleanup_preprocessor(clean_html(request.query))
     system_prompt = prompt_storage.get(request.prompt_type)
     return EstimatorIn(
         query=cleanup_text,
@@ -25,6 +24,7 @@ def preprocess(
         debug_level=request.debug_level,
         debug_info=(
             {"original_query": request.query}
-            if request.debug_level.is_high_level() else None
-        )
+            if request.debug_level.is_high_level()
+            else None
+        ),
     )

@@ -23,10 +23,9 @@ class TrivialStrategy(AbstractStrategyPrediction):
         )
 
 
-
 def create_answer(strategy_output: StrategyOut) -> RagResponse:
     return RagResponse(
         answer=strategy_output.answer,
         item_list=strategy_output.documents,
-        debug_info=strategy_output.debug_info
+        debug_info=strategy_output.debug_info,
     )

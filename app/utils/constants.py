@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class TargetLabels(int, Enum):
     TARGET_1 = 1
     TARGET_0 = 0
@@ -27,6 +28,3 @@ class SearchStrategy(str, Enum):
 class CacheStrategy(str, Enum):
     REDIS = "redis"
     NO_CACHE = "no_cache"
-
-
-

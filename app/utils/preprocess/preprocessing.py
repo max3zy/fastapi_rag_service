@@ -1,10 +1,10 @@
 from app.utils.preprocess.preprocess_regex import (
+    HTML_REGEXP,
+    SPACES_REGEXP,
+    SYMBOLS_REGEXP,
+    SYMBOLS_WITHDASH_REGEXP,
     TABS_REGEXP,
     TAGS_REGEXP,
-    SYMBOLS_WITHDASH_REGEXP,
-    SYMBOLS_REGEXP,
-    SPACES_REGEXP,
-    HTML_REGEXP
 )
 
 

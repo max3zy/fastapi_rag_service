@@ -4,7 +4,7 @@ from typing import List
 from app.schemas.common.documents import Document
 from app.schemas.common.estimators_dto import EstimatorIn, StrategyIn
 from app.services.llm_providers import LlamaProvider
-from app.services.redis.redis_service import NoCache, CacheRedis
+from app.services.redis.redis_service import CacheRedis, NoCache
 from app.services.search_service import OpenSearchApiClient
 from app.services.vectorization_service import TransformersVectorization
 from app.utils.constants import CacheStrategy
@@ -21,11 +21,8 @@ class Rag(ABC):
         }
 
     async def get_answer(self, rag_input: EstimatorIn) -> StrategyIn:
-        if (
-                not rag_input.category.category
-                and rag_input.intent_classifier.use
-        ):
-            pass # todo intent classifiactor returns user category: ex - rag_input.category.category = clf.returned_score
+        if not rag_input.category.category and rag_input.intent_classifier.use:
+            pass  # todo intent classifiactor returns user category: ex - rag_input.category.category = clf.returned_score
 
         similar_documents = await self.found_similar_docs(rag_input)
 
@@ -73,18 +70,14 @@ class Rag(ABC):
         documents = await self.search_service.request(
             query=rag_input.query,
             num_docs=rag_input.num_docs,
-            embedding=embedding
+            embedding=embedding,
         )
         return [
             Document(
-                text=item['_source']['text_filtered'],
-                title=item['_source']['title3_main'],
-                category=item['_source']['title1'],
-                similarity=item['_score'],
-            ) for item in documents
+                text=item["_source"]["text_filtered"],
+                title=item["_source"]["title3_main"],
+                category=item["_source"]["title1"],
+                similarity=item["_score"],
+            )
+            for item in documents
         ]
-
-
-
-
-

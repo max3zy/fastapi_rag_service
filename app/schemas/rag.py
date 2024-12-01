@@ -1,5 +1,5 @@
 import uuid
-from typing import Optional, List, Any, Dict
+from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, Field
 
@@ -8,10 +8,10 @@ from app.schemas.censor import Censor
 from app.schemas.common.documents import Document
 from app.schemas.intent_classifier import IntentClf
 from app.utils.constants import (
-    SearchStrategy,
     CacheStrategy,
     DebugLevel,
-    PromptType
+    PromptType,
+    SearchStrategy,
 )
 
 
@@ -30,7 +30,7 @@ class RagRequest(BaseModel):
         Censor(),
         description=(
             "использование и параметры классификатора вредоносных запросов"
-        )
+        ),
     )
     cache_strategy: Optional[CacheStrategy] = Field(
         CacheStrategy.NO_CACHE, description="стратегия кэширования ответов ЛЛМ"
@@ -42,7 +42,7 @@ class RagRequest(BaseModel):
         IntentClf(),
         description=(
             "использование и параметры классификатора категории запроса"
-        )
+        ),
     )
     session_id: Optional[str] = Field(
         str(uuid.uuid4()),

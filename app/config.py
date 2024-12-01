@@ -8,4 +8,3 @@ settings = Dynaconf(
     load_dotenv=False,
     merge_enabled=True,
 )
-

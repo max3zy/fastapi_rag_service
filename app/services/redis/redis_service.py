@@ -1,5 +1,5 @@
 import abc
-from typing import Union, Optional
+from typing import Optional, Union
 
 from aioredis import Redis
 
@@ -60,4 +60,3 @@ class NoCache(CacheSystem):
 
     async def set(self, key: str, val: str) -> None:
         pass
-

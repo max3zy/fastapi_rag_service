@@ -1,11 +1,11 @@
-from typing import Optional, Dict, Any, List
+from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel
 
 from app.schemas.categories import Category
 from app.schemas.common.documents import Document
 from app.schemas.intent_classifier import IntentClf
-from app.utils.constants import DebugLevel, CacheStrategy, SearchStrategy
+from app.utils.constants import CacheStrategy, DebugLevel, SearchStrategy
 
 
 class EstimatorIn(BaseModel):

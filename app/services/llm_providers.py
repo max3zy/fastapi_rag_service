@@ -1,11 +1,11 @@
-from typing import List, Any
+from typing import Any, List
 
-from ollama import Client, AsyncClient
+from ollama import AsyncClient, Client
 
 
 class LlamaProvider:
-    LLAMA_HOST = '127.0.0.1:11434'
-    MODEL = 'llama3.2'
+    LLAMA_HOST = "127.0.0.1:11434"
+    MODEL = "llama3.2"
     PROMPT_TEMPLATE = """ 
     ТЫ - умный помощник портала госуслуги. 
     Твоя задача дать максимально точный ответ на вопрос пользователя 
@@ -21,18 +21,17 @@ class LlamaProvider:
         return self.model.chat(
             model=self.MODEL,
             messages=[
-                {
-                    'role': 'user',
-                    'content': self.make_prompt(query, documents)
-                }
-            ]
+                {"role": "user", "content": self.make_prompt(query, documents)}
+            ],
         )
 
     def make_prompt(self, query: str, documents: str):
-        print(self.PROMPT_TEMPLATE.format(
-            query=query,
-            documents=documents,
-        ))
+        print(
+            self.PROMPT_TEMPLATE.format(
+                query=query,
+                documents=documents,
+            )
+        )
         return self.PROMPT_TEMPLATE.format(
             query=query,
             documents=documents,

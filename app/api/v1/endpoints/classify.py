@@ -7,6 +7,7 @@ from fastapi import APIRouter, Depends
 
 from app.api.containers import AppContainer
 from app.config import settings
+
 # from app.da_log.events import LoggerEvents
 # from app.da_log.logger import LogExtra
 from app.preprocesses.preprocesses import preprocess
@@ -30,15 +31,13 @@ router = APIRouter()
 @inject
 async def quest(
     request: RagRequest,
-    rag: Rag = Depends(
-        Provide[AppContainer.rag]
-    ),
+    rag: Rag = Depends(Provide[AppContainer.rag]),
     strategy: TrivialStrategy = Depends(
         Provide[AppContainer.trivial_strategy]
     ),
     prompt_storage: PromptService = Depends(
         Provide[AppContainer.prompt_storage]
-    )
+    ),
 ) -> RagResponse:
     """
     workflow:
@@ -47,7 +46,7 @@ async def quest(
     3. postprocess answer
     """
     if request.censor.use:
-        pass # todo censor check
+        pass  # todo censor check
     estimator_input = preprocess(
         request=request, prompt_storage=prompt_storage
     )
@@ -69,7 +68,7 @@ async def quest(
 @router.post("/flush")
 @inject
 async def flush(
-    redis: CacheRedis = Depends(Provide[AppContainer.service_redis])
+    redis: CacheRedis = Depends(Provide[AppContainer.service_redis]),
 ):
     try:
         await redis.flush()

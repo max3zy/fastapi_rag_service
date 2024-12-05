@@ -13,6 +13,10 @@ class AbstractStrategyPrediction(ABC):
 
 class TrivialStrategy(AbstractStrategyPrediction):
     def process(self, strategy_in: StrategyIn) -> StrategyOut:
+        """
+        здесь должен быть постпроцессинг
+        например - приведение ответа ЛЛМ в нормальный вид
+        """
         # todo POST_PROCESSING PART
         return StrategyOut(
             answer=strategy_in.answer,
@@ -24,6 +28,9 @@ class TrivialStrategy(AbstractStrategyPrediction):
 
 
 def create_answer(strategy_output: StrategyOut) -> RagResponse:
+    """
+    создается финальный ответ, который увидит пользователь
+    """
     return RagResponse(
         answer=strategy_output.answer,
         item_list=strategy_output.documents,

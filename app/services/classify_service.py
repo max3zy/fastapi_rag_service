@@ -12,6 +12,10 @@ from app.utils.constants import CacheStrategy
 
 class Rag(ABC):
     def __init__(self, redis_service):
+        """
+        инициализация класса.
+        устанавливаются сервисы векторизации, поиска, ллм и тд
+        """
         self.search_service = OpenSearchApiClient()
         self.vectorize_service = TransformersVectorization()
         self.llm_model = LlamaProvider()
@@ -21,6 +25,11 @@ class Rag(ABC):
         }
 
     async def get_answer(self, rag_input: EstimatorIn) -> StrategyIn:
+        """
+        основная функция в которой происходит:
+        1) поиск документов
+        2) вызов ллм
+        """
         if not rag_input.category.category and rag_input.intent_classifier.use:
             pass  # todo intent classifiactor returns user category: ex - rag_input.category.category = clf.returned_score
 
@@ -63,6 +72,10 @@ class Rag(ABC):
     async def found_similar_docs(
         self, rag_input: EstimatorIn
     ) -> List[Document]:
+        """
+        поиск документов
+        для тех типов поиска, в которых нужны эмбеддинги - запрос векторизуется
+        """
         embedding = None
         if rag_input.search_strategy.is_use_embedding():
             embedding = self.vectorize_service.emb(rag_input.query)

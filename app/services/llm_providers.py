@@ -18,6 +18,9 @@ class LlamaProvider:
         self.model = Client(host=self.LLAMA_HOST)
 
     async def request(self, query: str, documents: str) -> str:
+        """
+        просто вызов ЛЛАМы, которая хостится на локальной машине
+        """
         return self.model.chat(
             model=self.MODEL,
             messages=[
@@ -26,6 +29,9 @@ class LlamaProvider:
         )
 
     def make_prompt(self, query: str, documents: str):
+        """
+        форматирование промпта (нужно подставить туда запрос и документы)
+        """
         print(
             self.PROMPT_TEMPLATE.format(
                 query=query,

@@ -23,6 +23,11 @@ class CacheSystem(abc.ABC):
 
 class CacheRedis(CacheSystem):
     def __init__(self, redis: Redis) -> None:
+        """
+        Сервис отвечающий за кэширование запросов
+        Если нам уже задавали такой же вопрос - мы берем его из REDIS
+        вместо хождения в ЛЛМ
+        """
         self._redis = redis
         self._hasher = Hasher(hasher=settings.REDIS_HASHER).hash_data
         self._min_key_length_to_hash = settings.SIZE_CHARS

@@ -7,4 +7,5 @@ router = APIRouter()
 # TODO fastapi-async-healthcheck
 @router.get("/health")
 async def health():
+    """ обычный хэлс чек - если этот эндпоинт не отвечает, значит сервису херовенько"""
     return "OK"

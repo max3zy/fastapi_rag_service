@@ -10,4 +10,7 @@ class TransformersVectorization:
         )
 
     def emb(self, query: str) -> List[float]:
+        """
+        тут чисто запрос векторизуется пока что какой-то моделькой из HF
+        """
         return self.model.encode(query).tolist()

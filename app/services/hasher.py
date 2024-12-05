@@ -2,6 +2,9 @@ import hashlib
 
 
 class Hasher:
+    """
+    выбор метода хэширования
+    """
     _hasher: object
 
     @staticmethod

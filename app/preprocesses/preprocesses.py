@@ -10,6 +10,11 @@ from app.utils.preprocess.preprocessing import (
 def preprocess(
     request: RagRequest, prompt_storage: PromptService
 ) -> EstimatorIn:
+    """
+    здесь формируется структура, которая в дальнейшем будет передаваться в раг
+    вместе с этим чистится текст от лишних символов
+    + устанавливается промпт для ЛЛМ
+    """
     cleanup_text = text_cleanup_preprocessor(clean_html(request.query))
     system_prompt = prompt_storage.get(request.prompt_type)
     return EstimatorIn(

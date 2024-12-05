@@ -5,7 +5,7 @@ from opensearchpy import AsyncOpenSearch, OpenSearch
 
 class OpenSearchApiClient:
     INDEX_NAME = "test_faqs_v1"
-    HOST = "localhost"
+    HOST = "http://10.65.248.12:9200"
     TIMEOUT = 1000
     MAX_RETRIES = 2
     SIZE = 1
@@ -22,6 +22,10 @@ class OpenSearchApiClient:
     async def request(
         self, query: str, num_docs: int, embedding: Optional[List[float]]
     ) -> List[Any]:
+        """
+        здесь формируется запрос (body) и передается в клиента опенсерча
+        клиент возвращает ответ, из которого мы отдаем содержательную часть (hits.hits - string 40)
+        """
         body = {
             "size": num_docs * 2,
             "query": {

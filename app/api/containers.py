@@ -1,9 +1,11 @@
 from dependency_injector import containers, providers
 
 from app.config import settings
+from app.services.answer_templates_storage import AnswerTemplateStorage
 
 # from app.estimators.classifiers import ClassifierRuBert, OnnxLoader
 from app.services.classify_service import Rag
+from app.services.llm_providers import LLamaFewShot
 from app.services.prompt_service import PromptService
 from app.services.redis.redis_init_pool import init_redis_pool
 from app.services.redis.redis_service import CacheRedis
@@ -31,6 +33,10 @@ class AppContainer(containers.DeclarativeContainer):
         CacheRedis,
         redis=redis_pool,
     )
+
+    censor = providers.Singleton(LLamaFewShot)
+
+    answer_storage = providers.Singleton(AnswerTemplateStorage)
 
     # onnx_loader = providers.Singleton(
     #     OnnxLoader,

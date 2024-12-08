@@ -1,9 +1,11 @@
+import re
 import time
 from typing import Any, Dict, Optional
 
 # from da_robot_max_chain.da_log.logger import logger_factory
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends
+from ollama import ChatResponse
 
 from app.api.containers import AppContainer
 from app.config import settings
@@ -13,10 +15,13 @@ from app.config import settings
 from app.preprocesses.preprocesses import preprocess
 from app.schemas.classify import ClassifyResponse
 from app.schemas.rag import RagRequest, RagResponse
+from app.services.answer_templates_storage import AnswerTemplateStorage
 from app.services.classify_service import Rag
+from app.services.llm_providers import LLamaFewShot
 from app.services.prompt_service import PromptService
 from app.services.redis.redis_service import CacheRedis
 from app.strategies.strategies import TrivialStrategy, create_answer
+from app.utils.constants import StatusCode
 
 router = APIRouter()
 
@@ -38,6 +43,10 @@ async def quest(
     prompt_storage: PromptService = Depends(
         Provide[AppContainer.prompt_storage]
     ),
+    censor: LLamaFewShot = Depends(Provide[AppContainer.censor]),
+    answers_storage: AnswerTemplateStorage = Depends(
+        Provide[AppContainer.answer_storage]
+    ),
 ) -> RagResponse:
     """
     workflow:
@@ -46,7 +55,14 @@ async def quest(
     3. postprocess answer
     """
     if request.censor.use:
-        pass  # todo censor check
+        passed = await censor.request(request.query)
+        if not passed:
+            return RagResponse(
+                answer=answers_storage.get(StatusCode.CENSORED),
+                status_code=StatusCode.CENSORED,
+                item_list=[],
+            )
+
     estimator_input = preprocess(
         request=request, prompt_storage=prompt_storage
     )

@@ -1,9 +1,11 @@
 from enum import Enum
 
 
-class TargetLabels(int, Enum):
-    TARGET_1 = 1
-    TARGET_0 = 0
+class StatusCode(str, Enum):
+    CENSORED = "CENSORED"
+    PASSED = "PASSED"
+    NO_INFO = "NO_INFO"
+    NO_ANSWER = "NO_ANSWER"
 
 
 class DebugLevel(int, Enum):
@@ -19,7 +21,11 @@ class PromptType(str, Enum):
 
 
 class SearchStrategy(str, Enum):
-    OPEN_SEARCH = "open_search_vector"
+    OPEN_SEARCH_VECTOR = "open_search_vector"
+    OPEN_SEARCH_HYBRID = "open_search_hybrid"
+    OPEN_SEARCH_FULL_TEXT = "open_search_full_text"
+    FAISS_TABLE_VECTOR = "faiss_table_vector"
+    TABLE_PREFIX = "table_prefix"
 
     def is_use_embedding(self) -> bool:
         return "vector" in self

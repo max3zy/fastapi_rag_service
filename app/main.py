@@ -31,6 +31,7 @@ def add_middleware(app: FastAPI) -> None:
 def app_factory() -> FastAPI:
     container = AppContainer()
     container.wire([classify])
+    container.rag()
 
     app = FastAPI(
         title=settings.SERVICE_TITLE,

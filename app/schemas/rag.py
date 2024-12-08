@@ -12,6 +12,7 @@ from app.utils.constants import (
     DebugLevel,
     PromptType,
     SearchStrategy,
+    StatusCode,
 )
 
 
@@ -21,7 +22,8 @@ class RagRequest(BaseModel):
         5, description="кол-во документов поисковой выдачи"
     )
     search_strategy: Optional[SearchStrategy] = Field(
-        SearchStrategy.OPEN_SEARCH, description="стратегия поиска документов"
+        SearchStrategy.OPEN_SEARCH_VECTOR,
+        description="стратегия поиска документов",
     )
     # llm_providedr: Optional[LlmProvider] = Field(
     #     LlmProvider.LLAMA_2, description=""
@@ -60,4 +62,5 @@ class RagRequest(BaseModel):
 class RagResponse(BaseModel):
     answer: str
     item_list: List[Document]
-    debug_info: Optional[Dict[str, Any]]
+    status_code: StatusCode
+    debug_info: Optional[Dict[str, Any]] = None

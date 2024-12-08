@@ -22,6 +22,8 @@
     SERVICE_DESCRIPTION = ""
     SERVICE_VERSION = "0.1.0"
 
+    PATH_TO_INDEX = "artifacts/dictionaries/gu_faqs.pqt"
+
     CACHE_HOST_REDIS = "localhost"
     CACHE_PORT_REDIS = 6379
 

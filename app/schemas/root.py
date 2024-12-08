@@ -5,7 +5,7 @@ from app.config import settings
 
 class Root(BaseModel):
     message: str = Field(
-        f"rag-service v {settings.SERVICE_VERSION} Команды навыков",
+        f"rag-service v {settings.SERVICE_VERSION}",
         description="Приветственное сообщение от сервера",
         example=f" v {settings.SERVICE_VERSION}",
     )

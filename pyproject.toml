@@ -21,6 +21,10 @@ opensearch-py = "^2.7.1"
 sentence-transformers = "^3.3.1"
 ollama = "^0.4.1"
 aioredis = "^2.0.1"
+pyahocorasick = "^2.1.0"
+pyarrow = "^18.1.0"
+fastparquet = "^2024.11.0"
+thefuzz = "^0.22.1"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.1.0"

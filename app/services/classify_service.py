@@ -1,18 +1,56 @@
 from abc import ABC
-from typing import List
+from typing import Dict, List, Union
 
+from app.config import settings
 from app.schemas.common.documents import Document
 from app.schemas.common.estimators_dto import EstimatorIn, StrategyIn
 from app.services.llm_providers import LlamaProvider
 from app.services.redis.redis_service import CacheRedis, NoCache
-from app.services.search_service import OpenSearchApiClient
+from app.services.search_service import (
+    FaissVectorClient,
+    OpenSearchApiClient,
+    OpenSearchFullTextApiClient,
+    OpenSearchHybridApiClient,
+    OpenSearchVectorApiClient,
+    PrefixClient,
+    TableSearchClient,
+)
 from app.services.vectorization_service import TransformersVectorization
-from app.utils.constants import CacheStrategy
+from app.utils.constants import CacheStrategy, SearchStrategy
 
 
 class Rag(ABC):
     def __init__(self, redis_service):
-        self.search_service = OpenSearchApiClient()
+        self.search_service: Dict[
+            SearchStrategy, Union[TableSearchClient, OpenSearchApiClient]
+        ] = {
+            SearchStrategy.OPEN_SEARCH_VECTOR: OpenSearchVectorApiClient(
+                index="test_faqs_v1",
+                host="localhost",
+                timeout=1000,
+                max_retries=2,
+            ),
+            SearchStrategy.OPEN_SEARCH_HYBRID: OpenSearchHybridApiClient(
+                index="test_faqs_v1",
+                host="localhost",
+                timeout=1000,
+                max_retries=2,
+            ),
+            SearchStrategy.OPEN_SEARCH_FULL_TEXT: OpenSearchFullTextApiClient(
+                index="test_faqs_v1",
+                host="localhost",
+                timeout=1000,
+                max_retries=2,
+            ),
+            SearchStrategy.FAISS_TABLE_VECTOR: FaissVectorClient(
+                table_path=settings.PATH_TO_INDEX,
+                keys_for_filter=("title3_zagolovok",),
+            ),
+            SearchStrategy.TABLE_PREFIX: PrefixClient(
+                table_path=settings.PATH_TO_INDEX,
+                keys_for_filter=("title3_zagolovok",),
+            ),
+        }
         self.vectorize_service = TransformersVectorization()
         self.llm_model = LlamaProvider()
         self.cache_system = {
@@ -26,13 +64,6 @@ class Rag(ABC):
 
         similar_documents = await self.found_similar_docs(rag_input)
 
-        # llm_answer = self.cache_holder.get(
-        #     rag_input.text, rag_input.cache_strategy
-        # )
-
-        # debug_info = similar_documents.debug_info
-        # if debug_info is None:
-        #     debug_info = {}
         system_cache = self.cache_system.get(
             rag_input.cache_strategy, CacheStrategy.NO_CACHE
         )
@@ -67,17 +98,20 @@ class Rag(ABC):
         if rag_input.search_strategy.is_use_embedding():
             embedding = self.vectorize_service.emb(rag_input.query)
 
-        documents = await self.search_service.request(
+        documents = await self.search_service[
+            rag_input.search_strategy
+        ].request(
             query=rag_input.query,
             num_docs=rag_input.num_docs,
             embedding=embedding,
         )
-        return [
-            Document(
-                text=item["_source"]["text_filtered"],
-                title=item["_source"]["title3_main"],
-                category=item["_source"]["title1"],
-                similarity=item["_score"],
-            )
-            for item in documents
-        ]
+        # return [
+        #     Document(
+        #         text=item["_source"]["text_filtered"],
+        #         title=item["_source"]["title3_main"],
+        #         category=item["_source"]["title1"],
+        #         similarity=item["_score"],
+        #     )
+        #     for item in documents
+        # ]
+        return documents

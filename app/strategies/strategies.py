@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from app.schemas.classify import ClassifyResponse
 from app.schemas.common.estimators_dto import StrategyIn, StrategyOut
 from app.schemas.rag import RagResponse
+from app.utils.constants import StatusCode
 
 
 class AbstractStrategyPrediction(ABC):
@@ -28,4 +29,5 @@ def create_answer(strategy_output: StrategyOut) -> RagResponse:
         answer=strategy_output.answer,
         item_list=strategy_output.documents,
         debug_info=strategy_output.debug_info,
+        status_code=StatusCode.PASSED,
     )

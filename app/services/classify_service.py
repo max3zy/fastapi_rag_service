@@ -54,7 +54,7 @@ class Rag(ABC):
         self.vectorize_service = TransformersVectorization()
         self.llm_model = LlamaProvider()
         self.cache_system = {
-            CacheStrategy.REDIS: CacheRedis(redis=redis_service),
+            CacheStrategy.REDIS: CacheRedis(),
             CacheStrategy.NO_CACHE: NoCache(),
         }
 
@@ -77,7 +77,7 @@ class Rag(ABC):
                 documents="\n\n".join([x.text for x in similar_documents]),
                 # prompt_template=rag_input.prompt_template
             )
-            # llm_answer = 'abc xd'
+            llm_answer = 'abc xd'
             await system_cache.set(key=rag_input.query, val=llm_answer)
 
         print(llm_answer)

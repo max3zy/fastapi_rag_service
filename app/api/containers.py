@@ -7,7 +7,7 @@ from app.services.answer_templates_storage import AnswerTemplateStorage
 from app.services.classify_service import Rag
 from app.services.llm_providers import LLamaFewShot
 from app.services.prompt_service import PromptService
-from app.services.redis.redis_init_pool import init_redis_pool
+from app.services.redis.redis_init_pool import init_redis_pool, RedisConnection
 from app.services.redis.redis_service import CacheRedis
 from app.strategies.strategies import TrivialStrategy
 
@@ -20,19 +20,17 @@ class AppContainer(containers.DeclarativeContainer):
             "classifier_onnx_model": settings.CLASSIFIER_ONNX_MODEL,
             "redis_host": settings.CACHE_HOST_REDIS,
             "redis_port": settings.CACHE_PORT_REDIS,
+            "redis_timeout": settings.CACHE_REDIS_TIMEOUT,
         }
     )
 
-    redis_pool = providers.Resource(
-        init_redis_pool,
-        host=config.redis_host,
-        port=config.redis_port,
-    )
+    # redis_pool = providers.Resource(
+    #     init_redis_pool,
+    #     host=config.redis_host,
+    #     port=config.redis_port,
+    # )
 
-    service_redis = providers.Singleton(
-        CacheRedis,
-        redis=redis_pool,
-    )
+    service_redis = providers.Singleton(CacheRedis)
 
     censor = providers.Singleton(LLamaFewShot)
 

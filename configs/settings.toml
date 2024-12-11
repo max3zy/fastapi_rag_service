@@ -26,6 +26,7 @@
 
     CACHE_HOST_REDIS = "localhost"
     CACHE_PORT_REDIS = 6379
+    CACHE_REDIS_TIMEOUT = 2
 
     SIZE_CHARS = 128
     REDIS_HASHER = "hashlib_sha512"

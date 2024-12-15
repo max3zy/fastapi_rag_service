@@ -6,3 +6,6 @@ class Document(BaseModel):
     title: str
     category: str
     similarity: float
+
+    def __lt__(self, other) -> bool:
+        return self.similarity > other.similarity

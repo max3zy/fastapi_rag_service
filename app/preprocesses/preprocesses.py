@@ -21,6 +21,9 @@ def preprocess(
         intent_classifier=request.intent_classifier,
         session_id=request.session_id,
         system_prompt=system_prompt,
+        sim_threshold=request.sim_threshold,
+        vectorize_strategy=request.vectorize_strategy,
+        use_llm=request.use_llm,
         debug_level=request.debug_level,
         debug_info=(
             {"original_query": request.query}

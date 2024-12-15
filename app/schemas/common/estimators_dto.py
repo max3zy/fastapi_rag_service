@@ -5,7 +5,12 @@ from pydantic import BaseModel
 from app.schemas.categories import Category
 from app.schemas.common.documents import Document
 from app.schemas.intent_classifier import IntentClf
-from app.utils.constants import CacheStrategy, DebugLevel, SearchStrategy
+from app.utils.constants import (
+    CacheStrategy,
+    DebugLevel,
+    SearchStrategy,
+    Vectorizer,
+)
 
 
 class EstimatorIn(BaseModel):
@@ -13,6 +18,9 @@ class EstimatorIn(BaseModel):
     num_docs: int
     search_strategy: SearchStrategy
     cache_strategy: CacheStrategy
+    vectorize_strategy: Vectorizer
+    use_llm: bool
+    sim_threshold: float
     category: Category
     intent_classifier: IntentClf
     session_id: str

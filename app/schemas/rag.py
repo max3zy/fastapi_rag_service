@@ -13,11 +13,14 @@ from app.utils.constants import (
     PromptType,
     SearchStrategy,
     StatusCode,
+    Vectorizer,
 )
 
 
 class RagRequest(BaseModel):
     query: str = Field(None, description="запрос пользователя")
+    use_llm: bool = True
+    sim_threshold: float = 0
     num_docs: Optional[int] = Field(
         5, description="кол-во документов поисковой выдачи"
     )
@@ -28,6 +31,10 @@ class RagRequest(BaseModel):
     # llm_providedr: Optional[LlmProvider] = Field(
     #     LlmProvider.LLAMA_2, description=""
     # )
+    vectorize_strategy: Optional[Vectorizer] = Field(
+        Vectorizer.DISTILUSE_FINETUNED,
+        description="выбор модельки векторизации",
+    )
     censor: Optional[Censor] = Field(
         Censor(),
         description=(

@@ -30,6 +30,12 @@
     SIZE_CHARS = 128
     REDIS_HASHER = "hashlib_sha512"
 
+    DISTILUSE_FINETUNED_740 = "artifacts/models/distiluse_finetuned_740"
+
+    OPEN_SEARCH_RETRIES = 2
+    OPEN_SEARCH_TIMEOUT = 2
+
+
 [K8S_DEV]
 
 [K8S_DEV01]

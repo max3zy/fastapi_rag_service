@@ -21,11 +21,10 @@ class PromptType(str, Enum):
 
 
 class SearchStrategy(str, Enum):
-    OPEN_SEARCH_VECTOR = "open_search_vector"
-    OPEN_SEARCH_HYBRID = "open_search_hybrid"
-    OPEN_SEARCH_FULL_TEXT = "open_search_full_text"
-    FAISS_TABLE_VECTOR = "faiss_table_vector"
-    TABLE_PREFIX = "table_prefix"
+    OPEN_SEARCH_VECTOR = "vector"
+    OPEN_SEARCH_HYBRID = "hybrid"
+    OPEN_SEARCH_FULL_TEXT = "full_text"
+    OPEN_SEARCH_PREFIX = "prefix"
 
     def is_use_embedding(self) -> bool:
         return "vector" in self
@@ -34,3 +33,8 @@ class SearchStrategy(str, Enum):
 class CacheStrategy(str, Enum):
     REDIS = "redis"
     NO_CACHE = "no_cache"
+
+
+class Vectorizer(str, Enum):
+    DISTILUSE_BASE = "distiluse_base"
+    DISTILUSE_FINETUNED = "distiluse_tuned"

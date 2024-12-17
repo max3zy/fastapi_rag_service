@@ -3,11 +3,14 @@ from typing import List
 from sentence_transformers import SentenceTransformer
 
 from app.config import settings
+from app.utils.base_model import singleton
 from app.utils.constants import Vectorizer
 
 
+@singleton
 class TransformersVectorization:
     BOX_MODEL = "sentence-transformers/distiluse-base-multilingual-cased-v1"
+
     def __init__(self):
         self.model = {
             Vectorizer.DISTILUSE_BASE: SentenceTransformer(self.BOX_MODEL),

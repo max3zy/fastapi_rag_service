@@ -1,6 +1,7 @@
 import random
 from typing import Dict, List
 
+from app.utils.base_model import singleton
 from app.utils.constants import StatusCode
 
 

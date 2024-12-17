@@ -4,6 +4,7 @@ from typing import Any, List, Union
 
 from ollama import AsyncClient, ChatResponse, Client, GenerateResponse
 
+from app.utils.base_model import singleton
 from app.utils.preprocess.preprocessing import (
     clean_html,
     text_cleanup_preprocessor,
@@ -59,6 +60,7 @@ class LLamaFewShot(Llama):
         )
 
 
+@singleton
 class LlamaProvider(Llama):
     PROMPT_TEMPLATE = """ 
     ТЫ - умный помощник портала госуслуги. 
@@ -108,8 +110,8 @@ class LLamaClf(Llama):
         response = self.model.generate(
             model=self.MODEL,
             prompt=self.PROMPT_TEMPLATE.format(
-                        text=text_cleanup_preprocessor(clean_html(query))
-            )
+                text=text_cleanup_preprocessor(clean_html(query))
+            ),
         )
         return self.process_response(response)
 

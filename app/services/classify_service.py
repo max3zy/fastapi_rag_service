@@ -15,8 +15,11 @@ from app.services.search_service import (
     OpenSearchVectorApiClient,
 )
 from app.services.vectorization_service import TransformersVectorization
-from app.utils.constants import CacheStrategy, SearchStrategy, \
-    DOCUMENT_SEPARATOR
+from app.utils.constants import (
+    DOCUMENT_SEPARATOR,
+    CacheStrategy,
+    SearchStrategy,
+)
 
 
 class Rag(ABC):

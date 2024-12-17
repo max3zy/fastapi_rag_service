@@ -6,6 +6,7 @@ from opensearchpy import AsyncOpenSearch
 from app.config import settings
 from app.schemas.common.documents import Document
 from app.schemas.search import OpenSearchResponse
+from app.utils.base_model import singleton
 
 
 class OpenSearchApiClient(ABC):
@@ -36,9 +37,7 @@ class OpenSearchApiClient(ABC):
     async def get_response_docs(
         self, body: Dict[str, Any], size: int = None
     ) -> List[Dict[str, Any]]:
-        res = await self.client.search(
-            index=self.index, body=body, size=size
-        )
+        res = await self.client.search(index=self.index, body=body, size=size)
         response = OpenSearchResponse(**res)
         return [
             Document(
@@ -51,6 +50,7 @@ class OpenSearchApiClient(ABC):
         ]
 
 
+@singleton
 class OpenSearchVectorApiClient(OpenSearchApiClient):
     NO_FILTER = {"match_all": {}}
 
@@ -92,6 +92,7 @@ class OpenSearchVectorApiClient(OpenSearchApiClient):
         return {"bool": {"filter": {"term": {"title1": category}}}}
 
 
+@singleton
 class OpenSearchHybridApiClient(OpenSearchApiClient):
     def __init__(self, index):
         super().__init__(index)
@@ -121,6 +122,7 @@ class OpenSearchHybridApiClient(OpenSearchApiClient):
         pass
 
 
+@singleton
 class OpenSearchPrefixApiClient(OpenSearchApiClient):
     def __init__(self, index):
         super().__init__(index)
@@ -140,6 +142,7 @@ class OpenSearchPrefixApiClient(OpenSearchApiClient):
         pass
 
 
+@singleton
 class OpenSearchFullTextApiClient(OpenSearchApiClient):
     def __init__(self, index):
         super().__init__(index)

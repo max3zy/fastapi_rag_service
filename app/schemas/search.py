@@ -1,4 +1,4 @@
-from typing import Any, Union, List, Optional
+from typing import Any, List, Optional, Union
 
 from pydantic import BaseModel, Field
 
@@ -8,6 +8,7 @@ class FaqDocumentSource(BaseModel):
     title1: str
     title3_zagolovok: Optional[str] = None
     title3_main: Optional[str] = None
+
 
 class HitTotal(BaseModel):
     value: int

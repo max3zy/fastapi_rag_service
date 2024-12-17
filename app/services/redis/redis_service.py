@@ -5,6 +5,7 @@ from aioredis import Redis
 
 from app.config import settings
 from app.services.hasher import Hasher
+from app.utils.base_model import singleton
 
 
 class CacheSystem(abc.ABC):
@@ -21,6 +22,7 @@ class CacheSystem(abc.ABC):
         pass
 
 
+@singleton
 class CacheRedis(CacheSystem):
     def __init__(self, redis: Redis) -> None:
         self._redis = redis
@@ -51,6 +53,7 @@ class CacheRedis(CacheSystem):
         await self._redis.set(key, val)
 
 
+@singleton
 class NoCache(CacheSystem):
     async def flush(self) -> None:
         pass

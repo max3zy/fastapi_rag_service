@@ -2,9 +2,8 @@ from dependency_injector import containers, providers
 
 from app.config import settings
 from app.services.answer_templates_storage import AnswerTemplateStorage
-
 from app.services.classify_service import Rag
-from app.services.llm_providers import LLamaFewShot, LLamaClf
+from app.services.llm_providers import LLamaClf, LLamaFewShot
 from app.services.prompt_service import PromptService
 from app.services.redis.redis_init_pool import init_redis_pool
 from app.services.redis.redis_service import CacheRedis
@@ -33,7 +32,7 @@ class AppContainer(containers.DeclarativeContainer):
         redis=redis_pool,
     )
 
-    # llama_clf = providers.Singleton(LLamaClf)
+    llama_clf = providers.Singleton(LLamaClf)
 
     censor = providers.Singleton(LLamaFewShot)
 

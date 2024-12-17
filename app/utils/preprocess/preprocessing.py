@@ -1,21 +1,30 @@
 import re
+from re import Match
 from typing import Optional
 
-from app.utils.constants import DOCUMENT_SEPARATOR, EMPTY_STRING, SPACE, \
-    STRING_SEPARATOR
+import markdown
+
+from app.utils.constants import (
+    DOCUMENT_SEPARATOR,
+    EMPTY_STRING,
+    SPACE,
+    STRING_SEPARATOR,
+)
 from app.utils.preprocess.preprocess_regex import (
     HTML_REGEXP,
+    REGEX_BETWEEN_LI_TAGS,
+    REGEX_BOLD_TAGS,
+    REGEX_CHAR_AFTER_LI_FIX,
+    REGEX_MD_FIX,
+    REGEX_P_TAGS,
+    REGEX_QUOT_CLOSE,
+    REGEX_QUOT_OPEN,
     SPACES_REGEXP,
     SYMBOLS_REGEXP,
     SYMBOLS_WITHDASH_REGEXP,
     TABS_REGEXP,
-    TAGS_REGEXP, REGEX_MD_FIX, REGEX_BETWEEN_LI_TAGS, REGEX_P_TAGS,
-    REGEX_BOLD_TAGS, REGEX_QUOT_OPEN, REGEX_QUOT_CLOSE,
-    REGEX_CHAR_AFTER_LI_FIX,
+    TAGS_REGEXP,
 )
-from re import Match
-
-import markdown
 
 
 def text_cleanup_preprocessor(text: str, keep_dash: bool = False) -> str:

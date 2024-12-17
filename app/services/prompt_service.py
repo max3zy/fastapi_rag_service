@@ -1,3 +1,4 @@
+from app.utils.base_model import singleton
 from app.utils.constants import PromptType
 
 

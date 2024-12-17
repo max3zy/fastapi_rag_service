@@ -16,7 +16,7 @@ from app.preprocesses.preprocesses import preprocess
 from app.schemas.rag import RagRequest, RagResponse
 from app.services.answer_templates_storage import AnswerTemplateStorage
 from app.services.classify_service import Rag
-from app.services.llm_providers import LLamaFewShot, LLamaClf
+from app.services.llm_providers import LLamaClf, LLamaFewShot
 from app.services.prompt_service import PromptService
 from app.services.redis.redis_service import CacheRedis
 from app.strategies.strategies import TrivialStrategy, create_answer
@@ -103,6 +103,6 @@ async def clf(
     text: str,
     classifier: LLamaClf = Depends(Provide[AppContainer.llama_clf]),
 ):
-    """ deprecated """
+    """deprecated"""
     answer = await classifier.request(text)
-    return {'answer': answer}
+    return {"answer": answer}

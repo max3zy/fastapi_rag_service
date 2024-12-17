@@ -31,10 +31,14 @@
     REDIS_HASHER = "hashlib_sha512"
 
     DISTILUSE_FINETUNED_740 = "artifacts/models/distiluse_finetuned_740"
+    MULTI_CLASSIFIER_CBM = "artifacts/models/multiclf/model_with_text_features.cbm"
 
     OPEN_SEARCH_RETRIES = 2
     OPEN_SEARCH_TIMEOUT = 2
 
+    INDEX_NAME.VECTOR_INDEX = "gu_vector_faqs_v1"
+    INDEX_NAME.FULL_TEXT_INDEX = "gu_fulltext_faqs_v1"
+    INDEX_NAME.PREFIX_INDEX = "gu_prefix_faqs_v1"
 
 [K8S_DEV]
 

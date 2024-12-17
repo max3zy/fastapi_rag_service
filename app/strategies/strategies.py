@@ -1,9 +1,9 @@
 from abc import ABC, abstractmethod
 
-from app.schemas.classify import ClassifyResponse
 from app.schemas.common.estimators_dto import StrategyIn, StrategyOut
 from app.schemas.rag import RagResponse
 from app.utils.constants import StatusCode
+from app.utils.preprocess.preprocessing import answer_postprocessing
 
 
 class AbstractStrategyPrediction(ABC):
@@ -14,9 +14,9 @@ class AbstractStrategyPrediction(ABC):
 
 class TrivialStrategy(AbstractStrategyPrediction):
     def process(self, strategy_in: StrategyIn) -> StrategyOut:
-        # todo POST_PROCESSING PART
+        answer = answer_postprocessing(str(strategy_in.answer))
         return StrategyOut(
-            answer=strategy_in.answer,
+            answer=answer,
             documents=strategy_in.documents,
             session_id=strategy_in.session_id,
             debug_level=strategy_in.debug_level,

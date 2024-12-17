@@ -27,6 +27,8 @@ fastparquet = "^2024.11.0"
 thefuzz = "^0.22.1"
 peft = "^0.14.0"
 llama-cpp-python = "^0.3.5"
+catboost = "^1.2.7"
+markdown = "^3.7"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.1.0"

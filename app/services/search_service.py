@@ -5,6 +5,7 @@ from opensearchpy import AsyncOpenSearch
 
 from app.config import settings
 from app.schemas.common.documents import Document
+from app.schemas.search import OpenSearchResponse
 
 
 class OpenSearchApiClient(ABC):
@@ -32,9 +33,22 @@ class OpenSearchApiClient(ABC):
     def build_filters(self, category: str) -> Dict[str, Any]:
         pass
 
-    async def get_response_hits(self, body) -> List[Dict[str, Any]]:
-        response = await self.client.search(index=self.index, body=body)
-        return response["hits"]["hits"]
+    async def get_response_docs(
+        self, body: Dict[str, Any], size: int = None
+    ) -> List[Dict[str, Any]]:
+        res = await self.client.search(
+            index=self.index, body=body, size=size
+        )
+        response = OpenSearchResponse(**res)
+        return [
+            Document(
+                text=item.source.text_filtered,
+                title=item.source.title3_zagolovok,
+                category=item.source.title1,
+                similarity=item.score,
+            )
+            for item in response.hits.hits
+        ]
 
 
 class OpenSearchVectorApiClient(OpenSearchApiClient):
@@ -48,7 +62,7 @@ class OpenSearchVectorApiClient(OpenSearchApiClient):
         query: str,
         num_docs: int,
         embedding: Optional[List[float]],
-        category: str,
+        category: Optional[str],
     ) -> List[Any]:
         body = {
             "size": num_docs,
@@ -72,18 +86,7 @@ class OpenSearchVectorApiClient(OpenSearchApiClient):
                 }
             },
         }
-
-        response = await self.client.search(index=self.index, body=body)
-        documents = response["hits"]["hits"]
-        return [
-            Document(
-                text=item["_source"]["text_filtered"],
-                title=item["_source"]["title3_zagolovok"],
-                category=item["_source"]["title1"],
-                similarity=item["_score"],
-            )
-            for item in documents
-        ]
+        return await self.get_response_docs(body)
 
     def build_filters(self, category: str) -> Dict[str, Any]:
         return {"bool": {"filter": {"term": {"title1": category}}}}
@@ -109,9 +112,10 @@ class OpenSearchHybridApiClient(OpenSearchApiClient):
             },
         }
 
-        response = await self.client.search(index=self.index, body=body)
-        # print(response)
-        return response["hits"]["hits"]
+        # response = await self.client.search(index=self.index, body=body)
+        # # print(response)
+        # return response["hits"]["hits"]
+        pass
 
     def build_filters(self, category: str) -> Dict[str, str]:
         pass
@@ -130,18 +134,7 @@ class OpenSearchPrefixApiClient(OpenSearchApiClient):
     ) -> List[Any]:
         body = {"query": {"prefix": {"title3_zagolovok": query}}}
 
-        response = await self.client.search(index=self.index, body=body)
-        # print(response)
-        documents = response["hits"]["hits"]
-        return [
-            Document(
-                text=item["_source"]["text_filtered"],
-                title=item["_source"]["title3_zagolovok"],
-                category=item["_source"]["title1"],
-                similarity=item["_score"],
-            )
-            for item in documents
-        ]
+        return await self.get_response_docs(body, size=num_docs)
 
     def build_filters(self, category: str) -> Dict[str, str]:
         pass
@@ -187,20 +180,7 @@ class OpenSearchFullTextApiClient(OpenSearchApiClient):
                 },
             },
         }
-        response = await self.client.search(
-            index=self.index, body=body, size=num_docs
-        )
-
-        documents = response["hits"]["hits"]
-        return [
-            Document(
-                text=item["_source"]["text_filtered"],
-                title=item["_source"]["title3_main"],
-                category=item["_source"]["title1"],
-                similarity=item["_score"],
-            )
-            for item in documents
-        ]
+        return await self.get_response_docs(body, size=num_docs)
 
     def build_filters(self, category: str) -> Dict[str, str]:
         pass

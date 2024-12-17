@@ -38,3 +38,9 @@ class CacheStrategy(str, Enum):
 class Vectorizer(str, Enum):
     DISTILUSE_BASE = "distiluse_base"
     DISTILUSE_FINETUNED = "distiluse_tuned"
+
+
+DOCUMENT_SEPARATOR = "\n\n"
+EMPTY_STRING = ""
+SPACE = " "
+STRING_SEPARATOR = "\n"

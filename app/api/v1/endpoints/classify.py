@@ -13,11 +13,10 @@ from app.config import settings
 # from app.da_log.events import LoggerEvents
 # from app.da_log.logger import LogExtra
 from app.preprocesses.preprocesses import preprocess
-from app.schemas.classify import ClassifyResponse
 from app.schemas.rag import RagRequest, RagResponse
 from app.services.answer_templates_storage import AnswerTemplateStorage
 from app.services.classify_service import Rag
-from app.services.llm_providers import LLamaFewShot
+from app.services.llm_providers import LLamaFewShot, LLamaClf
 from app.services.prompt_service import PromptService
 from app.services.redis.redis_service import CacheRedis
 from app.strategies.strategies import TrivialStrategy, create_answer
@@ -92,3 +91,18 @@ async def flush(
     except Exception as e:
         answer = str(e)
     return answer
+
+
+@router.get(
+    "/classify_category",
+    response_model=Dict[str, Any],
+    response_model_exclude_none=True,
+)
+@inject
+async def clf(
+    text: str,
+    classifier: LLamaClf = Depends(Provide[AppContainer.llama_clf]),
+):
+    """ deprecated """
+    answer = await classifier.request(text)
+    return {'answer': answer}

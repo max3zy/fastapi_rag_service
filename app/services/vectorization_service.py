@@ -7,11 +7,10 @@ from app.utils.constants import Vectorizer
 
 
 class TransformersVectorization:
+    BOX_MODEL = "sentence-transformers/distiluse-base-multilingual-cased-v1"
     def __init__(self):
         self.model = {
-            Vectorizer.DISTILUSE_BASE: SentenceTransformer(
-                "sentence-transformers/distiluse-base-multilingual-cased-v1"
-            ),
+            Vectorizer.DISTILUSE_BASE: SentenceTransformer(self.BOX_MODEL),
             Vectorizer.DISTILUSE_FINETUNED: SentenceTransformer(
                 settings.DISTILUSE_FINETUNED_740, local_files_only=True
             ),

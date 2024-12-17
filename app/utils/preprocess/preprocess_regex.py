@@ -12,3 +12,11 @@ SPACES_REGEXP_TEXT = r"\s+"
 SPACES_REGEXP = re.compile(SPACES_REGEXP_TEXT)
 HTML_REGEXP_TEXT = r"(\<(/?[^>]+)>)"
 HTML_REGEXP = re.compile(HTML_REGEXP_TEXT)
+
+REGEX_MD_FIX = re.compile(r"((?<=[^\n])\n(?=[^\n]))")
+REGEX_BOLD_TAGS = re.compile(r"<\/?(b|strong)>")
+REGEX_BETWEEN_LI_TAGS = re.compile(r"(<li>.*?</li>)")
+REGEX_P_TAGS = re.compile(r"</?p>")
+REGEX_QUOT_OPEN = re.compile(r'"\b')
+REGEX_QUOT_CLOSE = re.compile(r'\b"')
+REGEX_CHAR_AFTER_LI_FIX = re.compile(r"<li>(<[^/].*?>)?\w")

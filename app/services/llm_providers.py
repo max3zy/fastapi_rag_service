@@ -1,9 +1,8 @@
 import re
 from abc import ABC, abstractmethod
-from typing import Any, List
+from typing import Any, List, Union
 
-from ollama import AsyncClient, ChatResponse, Client
-from semver import process
+from ollama import AsyncClient, ChatResponse, Client, GenerateResponse
 
 from app.utils.preprocess.preprocessing import (
     clean_html,
@@ -19,11 +18,11 @@ class Llama(ABC):
         self.model = Client(host=self.LLAMA_HOST)
 
     @abstractmethod
-    async def request(self, query, documents):
+    async def request(self, query, documents) -> Union[str, bool]:
         pass
 
     @abstractmethod
-    def process_response(self, response: ChatResponse):
+    def process_response(self, response: ChatResponse) -> Union[str, bool]:
         pass
 
 
@@ -38,7 +37,7 @@ class LLamaFewShot(Llama):
     def __init__(self):
         super().__init__()
 
-    async def request(self, query, documents=None):
+    async def request(self, query, documents=None) -> bool:
         response = self.model.chat(
             model=self.MODEL,
             messages=[
@@ -81,17 +80,38 @@ class LlamaProvider(Llama):
         )
         return self.process_response(response)
 
-    def process_response(self, response: ChatResponse):
+    def process_response(self, response: ChatResponse) -> str:
         return response.message.content
 
-    def make_prompt(self, query: str, documents: str):
-        print(
-            self.PROMPT_TEMPLATE.format(
-                query=query,
-                documents=documents,
-            )
-        )
+    def make_prompt(self, query: str, documents: str) -> str:
         return self.PROMPT_TEMPLATE.format(
             query=query,
             documents=documents,
         )
+
+
+class LLamaClf(Llama):
+    PROMPT_TEMPLATE = """
+    Твоя задача - помочь пользователю определиться с категорией его запроса.
+    Всего существует 6 категорий: "Социальная поддержка", "Транспорт", "Финансы, налоги, штрафы", "Образование", "Личные документы", "Другое"
+
+    Запрос пользователя: ```{text}```
+    Нужно в ответе написать ровно одну категорию из предоставленного выше списка. Ни словом больше ни словом меньше.
+    Запрос представляет из себя обращение на портал Госуслуги поэтому нужно максимально точно определить категорию.
+    """
+    SECURE_PATTERN = r"безопас"
+
+    def __init__(self):
+        super().__init__()
+
+    async def request(self, query, documents=None) -> str:
+        response = self.model.generate(
+            model=self.MODEL,
+            prompt=self.PROMPT_TEMPLATE.format(
+                        text=text_cleanup_preprocessor(clean_html(query))
+            )
+        )
+        return self.process_response(response)
+
+    def process_response(self, response: GenerateResponse) -> str:
+        return response.response

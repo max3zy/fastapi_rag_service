@@ -31,7 +31,7 @@ class EstimatorIn(BaseModel):
 
 class StrategyIn(BaseModel):
     query: str
-    answer: str
+    answer: Optional[str]
     documents: List[Document]
     session_id: str
     debug_level: DebugLevel

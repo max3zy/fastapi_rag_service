@@ -28,9 +28,6 @@ class RagRequest(BaseModel):
         SearchStrategy.OPEN_SEARCH_VECTOR,
         description="стратегия поиска документов",
     )
-    # llm_providedr: Optional[LlmProvider] = Field(
-    #     LlmProvider.LLAMA_2, description=""
-    # )
     vectorize_strategy: Optional[Vectorizer] = Field(
         Vectorizer.DISTILUSE_FINETUNED,
         description="выбор модельки векторизации",

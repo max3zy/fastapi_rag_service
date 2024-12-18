@@ -1,17 +1,9 @@
-import re
-import time
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
-# from da_robot_max_chain.da_log.logger import logger_factory
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends
-from ollama import ChatResponse
 
 from app.api.containers import AppContainer
-from app.config import settings
-
-# from app.da_log.events import LoggerEvents
-# from app.da_log.logger import LogExtra
 from app.preprocesses.preprocesses import preprocess
 from app.schemas.rag import RagRequest, RagResponse
 from app.services.answer_templates_storage import AnswerTemplateStorage
@@ -23,8 +15,6 @@ from app.strategies.strategies import TrivialStrategy, create_answer
 from app.utils.constants import StatusCode
 
 router = APIRouter()
-
-# logger = logger_factory(__name__)
 
 
 @router.post(
@@ -67,16 +57,9 @@ async def quest(
     )
     estimator_output = await rag.get_answer(rag_input=estimator_input)
     strategy_output = strategy.process(strategy_in=estimator_output)
-    # logger.info(
-    #     "Эндпоинт v1 сервиса успешно завершил свою работу",
-    #     extra=LogExtra(
-    #         query=query,
-    #         is_use_score=is_use_score,
-    #         threshold=threshold,
-    #         response_time=time.time() - start_time,
-    #         event=LoggerEvents.SERVICE_V1_SUCCESS,
-    #     ).dict(),
-    # )
+    strategy_output.answer = answers_storage.get(
+        status=strategy_output.status_code, answer=strategy_output.answer
+    )
     return create_answer(strategy_output=strategy_output)
 
 
@@ -85,6 +68,7 @@ async def quest(
 async def flush(
     redis: CacheRedis = Depends(Provide[AppContainer.service_redis]),
 ):
+    """эндпоинт для очистки бд редиса"""
     try:
         await redis.flush()
         answer = "FLUSHED"

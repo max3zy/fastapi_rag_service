@@ -21,10 +21,4 @@ ENV LC_ALL ru_RU.UTF-8
 ENV TZ Europe/Moscow
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-RUN groupadd -r jovyan && useradd --system --no-create-home -r -g jovyan jovyan
-
-RUN chown -R jovyan ./artifacts/
-
-USER jovyan
-
 CMD ["uvicorn", "app.main:app_factory", "--factory", "--host", "0.0.0.0", "--port", "8080"]

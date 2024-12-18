@@ -1,6 +1,5 @@
 PYTHON_VERSION = 3.9.13
 VENV_NAME = rag_service
-DVC_MODEL_ARTIFACTORY = dvc_models
 DOCKER_CONTAINER_LOCAL_NAME = rag_service
 
 
@@ -32,8 +31,6 @@ gen-req:
 	@echo "Генерация requirements.txt/requirements-dev.txt из poetry"
 	mkdir -p requirements; \
 	echo "poetry-core>=1.6.1" | tee requirements/requirements.txt requirements/requirements-dev.txt;
-# 	echo "--trusted-host nexus3.00.egov.local" >> requirements/requirements.txt
-# 	echo "--trusted-host nexus3.00.egov.local" >> requirements/requirements-dev.txt
 	poetry export --without-hashes | grep -v "@ file" >> requirements/requirements.txt
 	poetry export --with dev --without-hashes | grep -v "@ file" >> requirements/requirements-dev.txt
 

@@ -9,6 +9,7 @@ from app.utils.constants import (
     CacheStrategy,
     DebugLevel,
     SearchStrategy,
+    StatusCode,
     Vectorizer,
 )
 
@@ -42,5 +43,6 @@ class StrategyOut(BaseModel):
     answer: str
     documents: List[Document]
     session_id: str
+    status_code: StatusCode
     debug_level: DebugLevel
     debug_info: Optional[Dict[str, Any]]

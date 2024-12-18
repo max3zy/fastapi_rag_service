@@ -7,7 +7,7 @@ formatters:
 
   python_json_formatter:
     format: "%(message)s"
-#    class: da_robot_max_chain.da_log.logger.ELKJsonFormatter
+#    class: abc
 
 handlers:
   console:

@@ -1,8 +1,8 @@
 import re
 from abc import ABC, abstractmethod
-from typing import Any, List, Union
+from typing import Union
 
-from ollama import AsyncClient, ChatResponse, Client, GenerateResponse
+from ollama import ChatResponse, Client, GenerateResponse
 
 from app.utils.base_model import singleton
 from app.utils.preprocess.preprocessing import (
@@ -62,12 +62,28 @@ class LLamaFewShot(Llama):
 
 @singleton
 class LlamaProvider(Llama):
+    # PROMPT_TEMPLATE = """
+    # Роль: энциклопедия.
+    # Цель: максимально точно ответить на вопрос при использовании контекста.
+    # Необходимо найти в контексте информацию по вопросу и на основании этой информации сформулировать ответ.
+    # Если в контексте нет информации по вопросу, то отвечай "В моей базе знаний нет информации по данному вопросу".
+    # Твой ответ должен основываться исключительно на фактах, предоставленных в контексте.
+    # Дополнительный текст: выводить запрещено.
+    # Стиль: деловой.
+    # Орфография: исправлять.
+    # Отвечать обязательно строго на русском языке и строго на вопрос.
+    # Ответ писать строго в формате МАРКДАУН.
+    # ВОПРОС: ```{query}```.
+    # Контекст: ```{documents}```
+    # """
+
     PROMPT_TEMPLATE = """ 
-    ТЫ - умный помощник портала госуслуги. 
-    Твоя задача дать максимально точный ответ на вопрос пользователя 
-    на основании информации из предоставленных документов. 
-    НЕ ПРИДУМЫВАЙ ничего от себя, отвечай только исходя из контекста документов.
-    ВОПРОС ПОЛЬЗОВАТЕЛЯ: ```{query}```. ДОКУМЕНТЫ: ```{documents}```
+    Роль: энциклопедия.
+    Твоя задача максимально точно ответить на вопрос пользователя на основании предоставленной информации.
+    Отвечай строго на русском, не придумывай факты, которых нет в тексте. 
+    Ответ должен быть строго в формате маркдаун.
+    ВОПРОС: ```{query}```. 
+    Информация: ```{documents}```
     """
 
     def __init__(self):
@@ -79,6 +95,7 @@ class LlamaProvider(Llama):
             messages=[
                 {"role": "user", "content": self.make_prompt(query, documents)}
             ],
+            options={"num_ctx": 200},
         )
         return self.process_response(response)
 

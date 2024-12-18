@@ -1,5 +1,3 @@
-from typing import Dict
-
 from catboost import CatBoostClassifier
 
 from app.config import settings

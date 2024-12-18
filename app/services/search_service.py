@@ -30,10 +30,6 @@ class OpenSearchApiClient(ABC):
     ) -> List[Document]:
         pass
 
-    @abstractmethod
-    def build_filters(self, category: str) -> Dict[str, Any]:
-        pass
-
     async def get_response_docs(
         self, body: Dict[str, Any], size: int = None
     ) -> List[Dict[str, Any]]:
@@ -66,7 +62,6 @@ class OpenSearchVectorApiClient(OpenSearchApiClient):
     ) -> List[Any]:
         body = {
             "size": num_docs,
-            # "_source": ["title", "text", "type"],
             "query": {
                 "script_score": {
                     "query": (
@@ -88,7 +83,8 @@ class OpenSearchVectorApiClient(OpenSearchApiClient):
         }
         return await self.get_response_docs(body)
 
-    def build_filters(self, category: str) -> Dict[str, Any]:
+    @staticmethod
+    def build_filters(category: str) -> Dict[str, Any]:
         return {"bool": {"filter": {"term": {"title1": category}}}}
 
 
@@ -104,21 +100,10 @@ class OpenSearchHybridApiClient(OpenSearchApiClient):
         embedding: Optional[List[float]],
         category: str,
     ) -> List[Any]:
-        body = {
-            "size": num_docs * 2,
-            "query": {
-                "knn": {
-                    "distiluse_embs_v1": {"vector": embedding, "k": num_docs}
-                }
-            },
-        }
-
-        # response = await self.client.search(index=self.index, body=body)
-        # # print(response)
-        # return response["hits"]["hits"]
         pass
 
-    def build_filters(self, category: str) -> Dict[str, str]:
+    @staticmethod
+    def build_filters(category: str) -> Dict[str, str]:
         pass
 
 
@@ -134,12 +119,19 @@ class OpenSearchPrefixApiClient(OpenSearchApiClient):
         embedding: Optional[List[float]],
         category: str,
     ) -> List[Any]:
-        body = {"query": {"prefix": {"title3_zagolovok": query}}}
+        body = {
+            "query": {"bool": {"must": self.build_filters(query, category)}}
+        }
 
         return await self.get_response_docs(body, size=num_docs)
 
-    def build_filters(self, category: str) -> Dict[str, str]:
-        pass
+    @staticmethod
+    def build_filters(query: str, category: str) -> List[Any]:
+        filters = [
+            {"prefix": {"title3_zagolovok": query}},
+            {"match": {"title1": category}} if category else None,
+        ]
+        return [el for el in filters if el is not None]
 
 
 @singleton
@@ -169,7 +161,8 @@ class OpenSearchFullTextApiClient(OpenSearchApiClient):
                                 "fuzziness": "AUTO",
                             }
                         }
-                    ]
+                    ],
+                    "filter": [self.build_filters(category)],
                 }
             },
             "highlight": {
@@ -185,5 +178,8 @@ class OpenSearchFullTextApiClient(OpenSearchApiClient):
         }
         return await self.get_response_docs(body, size=num_docs)
 
-    def build_filters(self, category: str) -> Dict[str, str]:
-        pass
+    @staticmethod
+    def build_filters(category: str) -> Optional[Dict[str, Any]]:
+        return (
+            {"term": {"title1": category}} if category else {"match_all": {}}
+        )

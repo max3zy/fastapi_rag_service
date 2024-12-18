@@ -11,7 +11,7 @@ def preprocess(
     request: RagRequest, prompt_storage: PromptService
 ) -> EstimatorIn:
     cleanup_text = text_cleanup_preprocessor(clean_html(request.query))
-    system_prompt = prompt_storage.get(request.prompt_type)
+    system_prompt = prompt_storage.get(request.prompt_type)  # deprecated
     return EstimatorIn(
         query=cleanup_text,
         num_docs=request.num_docs,

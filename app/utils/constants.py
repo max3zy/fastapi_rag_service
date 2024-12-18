@@ -4,7 +4,6 @@ from enum import Enum
 class StatusCode(str, Enum):
     CENSORED = "CENSORED"
     PASSED = "PASSED"
-    NO_INFO = "NO_INFO"
     NO_ANSWER = "NO_ANSWER"
 
 
@@ -44,3 +43,5 @@ DOCUMENT_SEPARATOR = "\n\n"
 EMPTY_STRING = ""
 SPACE = " "
 STRING_SEPARATOR = "\n"
+
+NO_ANSWER = {"", "<p>None</p>"}

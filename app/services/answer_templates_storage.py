@@ -1,7 +1,6 @@
 import random
-from typing import Dict, List
+from typing import Dict, List, Optional
 
-from app.utils.base_model import singleton
 from app.utils.constants import StatusCode
 
 
@@ -13,9 +12,16 @@ class AnswerTemplateStorage:
                 "Понял Вас, но не нашел, что ответить",
                 "Я не готов обсуждать эту тему",
                 "Не готов ответить на Ваш вопрос. Спросите что-нибудь еще",
-            ]
+            ],
+            StatusCode.NO_ANSWER: [
+                "Не нашел, что ответить на Ваш вопрос",
+                "Изучил информацию, но пока не могу ответить на Ваш вопрос",
+                "Попробуйте задать вопрос иначе",
+            ],
         }
 
-    def get(self, status: StatusCode) -> str:
+    def get(self, status: StatusCode, answer: Optional[str] = None) -> str:
         if status in self.storage.keys():
             return random.choice(self.storage.get(status))
+        else:
+            return answer
